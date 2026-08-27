@@ -1,0 +1,58 @@
+package main
+
+import (
+	"encoding/json"
+	"flag"
+	"fmt"
+	"log"
+	"os"
+	"strings"
+
+	"github.com/drawiks/odota-cli/parser"
+)
+
+func main() {
+	url := flag.String("url", "http://localhost:5600", "odota/parser URL")
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage: %s [--url URL] <match.dem>\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Parse a Dota 2 replay and output structured JSON.\n")
+		fmt.Fprintf(os.Stderr, "Output goes to stdout: %s match.dem > match.json\n\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "If input file has .ndjson extension, reads as raw parser output (no HTTP).\n")
+		flag.PrintDefaults()
+	}
+	flag.Parse()
+
+	if flag.NArg() < 1 {
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	inputFile := flag.Arg(0)
+
+	var events []parser.RawEvent
+	var err error
+
+	if strings.HasSuffix(inputFile, ".ndjson") || strings.HasSuffix(inputFile, ".json") {
+		events, err = parser.ReadNDJSONFile(inputFile)
+	} else {
+		demData, err := os.ReadFile(inputFile)
+		if err != nil {
+			log.Fatalf("read dem file: %v", err)
+		}
+		events, err = parser.FetchFromParser(demData, *url)
+	}
+	if err != nil {
+		log.Fatalf("parse: %v", err)
+	}
+
+	match, err := parser.Aggregate(events)
+	if err != nil {
+		log.Fatalf("aggregate: %v", err)
+	}
+
+	enc := json.NewEncoder(os.Stdout)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(match); err != nil {
+		log.Fatalf("encode: %v", err)
+	}
+}
