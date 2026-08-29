@@ -48,7 +48,7 @@ func FuzzClassifiers(f *testing.F) {
 		classifyTaunt(s)
 		classifySilence(s)
 		classifyDisarm(s)
-		classifyHeal(s)
+		_ = classifyHeal(s)
 	})
 }
 
@@ -61,7 +61,7 @@ func FuzzHeroNames(f *testing.F) {
 	}
 	f.Fuzz(func(t *testing.T, s string) {
 		unitToHeroName(s)
-		heroKey(s)
+		_ = heroKey(s)
 	})
 }
 
