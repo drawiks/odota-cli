@@ -11,8 +11,11 @@ import (
 	"github.com/drawiks/odota-cli/parser"
 )
 
+var version = "dev"
+
 func main() {
 	url := flag.String("url", "http://localhost:5600", "odota/parser URL")
+	showVersion := flag.Bool("version", false, "print version and exit")
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [--url URL] <match.dem>\n\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Parse a Dota 2 replay and output structured JSON.\n")
@@ -21,6 +24,11 @@ func main() {
 		flag.PrintDefaults()
 	}
 	flag.Parse()
+
+	if *showVersion {
+		fmt.Println(version)
+		return
+	}
 
 	if flag.NArg() < 1 {
 		flag.Usage()

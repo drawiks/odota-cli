@@ -1,0 +1,245 @@
+{
+  "match_id": 8926354517,
+  "duration_sec": 600,
+  "radiant_win": true,
+  "players": [
+    {
+      "steam_id": 76561198863696823,
+      "player_id": 0,
+      "hero_id": 83,
+      "hero": "treant",
+      "team": "radiant",
+      "name": "TA",
+      "kills": 12,
+      "deaths": 3,
+      "assists": 15,
+      "level": 30,
+      "last_hits": 250,
+      "networth": 25000,
+      "gpm": 1333,
+      "xpm": 2667,
+      "healing": 165,
+      "hero_damage": 360,
+      "damage_taken": 200,
+      "tower_damage": 0,
+      "stun_duration": 22.5,
+      "stun_sources": [
+        {
+          "inflictor": "dazzle_shallow_grave",
+          "category": "stun",
+          "duration": 2.5
+        }
+      ],
+      "buff_duration": 5,
+      "buff_sources": [
+        {
+          "inflictor": "dazzle_shallow_grave",
+          "category": "save",
+          "duration": 5
+        }
+      ],
+      "fear_duration": 6,
+      "fear_sources": [
+        {
+          "inflictor": "terrorize",
+          "category": "fear",
+          "duration": 6
+        }
+      ],
+      "roots_duration": 0,
+      "leash_duration": 0,
+      "trap_duration": 0,
+      "taunt_duration": 0,
+      "silence_duration": 0,
+      "break_duration": 0,
+      "disarm_duration": 0,
+      "heal_duration": 12,
+      "heal_value": 125,
+      "heal_sources": [
+        {
+          "inflictor": "item_urn_heal",
+          "category": "heal",
+          "duration": 12
+        },
+        {
+          "inflictor": "item_holy_locket",
+          "category": "heal",
+          "value": 125
+        }
+      ],
+      "gold_spent_wards": 200,
+      "gold_spent_smoke": 100,
+      "gold_spent_dust": 0,
+      "camps_stacked": 2,
+      "creeps_stacked": 5,
+      "rune_pickups": 1,
+      "first_blood": false
+    },
+    {
+      "steam_id": 76561199192587348,
+      "player_id": 1,
+      "hero_id": 86,
+      "hero": "rubick",
+      "team": "dire",
+      "name": "RB",
+      "kills": 9,
+      "deaths": 0,
+      "assists": 0,
+      "level": 28,
+      "last_hits": 0,
+      "networth": 22000,
+      "gpm": 1167,
+      "xpm": 2333,
+      "healing": 0,
+      "hero_damage": 200,
+      "damage_taken": 300,
+      "tower_damage": 500,
+      "stun_duration": 0,
+      "buff_duration": 0,
+      "fear_duration": 0,
+      "roots_duration": 4,
+      "root_sources": [
+        {
+          "inflictor": "naga_siren_ensnare",
+          "category": "root",
+          "duration": 4
+        }
+      ],
+      "leash_duration": 0,
+      "trap_duration": 0,
+      "taunt_duration": 0,
+      "silence_duration": 2,
+      "silence_sources": [
+        {
+          "inflictor": "orchid_malevolence",
+          "category": "silence",
+          "duration": 2
+        }
+      ],
+      "break_duration": 0,
+      "disarm_duration": 3,
+      "disarm_sources": [
+        {
+          "inflictor": "heavens_halberd",
+          "category": "disarm",
+          "duration": 3
+        }
+      ],
+      "heal_duration": 0,
+      "heal_value": 0,
+      "gold_spent_wards": 0,
+      "gold_spent_smoke": 0,
+      "gold_spent_dust": 80,
+      "camps_stacked": 0,
+      "creeps_stacked": 0,
+      "rune_pickups": 0,
+      "first_blood": true
+    },
+    {
+      "steam_id": 76561198196019611,
+      "player_id": 2,
+      "hero_id": 31,
+      "hero": "lich",
+      "team": "radiant",
+      "name": "LC",
+      "kills": 6,
+      "deaths": 0,
+      "assists": 0,
+      "level": 27,
+      "last_hits": 0,
+      "networth": 19000,
+      "gpm": 933,
+      "xpm": 1867,
+      "healing": 300,
+      "hero_damage": 0,
+      "damage_taken": 150,
+      "tower_damage": 100,
+      "stun_duration": 0,
+      "buff_duration": 0,
+      "fear_duration": 0,
+      "roots_duration": 0,
+      "leash_duration": 0,
+      "trap_duration": 5,
+      "trap_sources": [
+        {
+          "inflictor": "disruptor_kinetic_field",
+          "category": "trap",
+          "duration": 5
+        }
+      ],
+      "taunt_duration": 0,
+      "silence_duration": 0,
+      "break_duration": 2,
+      "break_sources": [
+        {
+          "inflictor": "item_silver_edge",
+          "category": "break",
+          "duration": 2
+        }
+      ],
+      "disarm_duration": 0,
+      "heal_duration": 0,
+      "heal_value": 300,
+      "heal_sources": [
+        {
+          "inflictor": "item_greater_famango",
+          "category": "heal",
+          "value": 300
+        }
+      ],
+      "gold_spent_wards": 0,
+      "gold_spent_smoke": 0,
+      "gold_spent_dust": 0,
+      "camps_stacked": 0,
+      "creeps_stacked": 0,
+      "rune_pickups": 0,
+      "first_blood": false
+    },
+    {
+      "steam_id": 76561199370624370,
+      "player_id": 3,
+      "hero_id": 110,
+      "hero": "phoenix",
+      "team": "dire",
+      "name": "PX",
+      "kills": 4,
+      "deaths": 0,
+      "assists": 0,
+      "level": 25,
+      "last_hits": 0,
+      "networth": 15000,
+      "gpm": 700,
+      "xpm": 1400,
+      "healing": 0,
+      "hero_damage": 150,
+      "damage_taken": 0,
+      "tower_damage": 0,
+      "stun_duration": 0,
+      "buff_duration": 0,
+      "fear_duration": 0,
+      "roots_duration": 0,
+      "leash_duration": 0,
+      "trap_duration": 0,
+      "taunt_duration": 5,
+      "taunt_sources": [
+        {
+          "inflictor": "axe_berserkers_call",
+          "category": "taunt",
+          "duration": 5
+        }
+      ],
+      "silence_duration": 0,
+      "break_duration": 0,
+      "disarm_duration": 0,
+      "heal_duration": 0,
+      "heal_value": 0,
+      "gold_spent_wards": 0,
+      "gold_spent_smoke": 0,
+      "gold_spent_dust": 0,
+      "camps_stacked": 0,
+      "creeps_stacked": 0,
+      "rune_pickups": 0,
+      "first_blood": false
+    }
+  ]
+}

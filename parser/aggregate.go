@@ -125,28 +125,8 @@ func Aggregate(events []RawEvent) (*Match, error) {
 
 	firstBloodSlot := -1
 
-	heroKey := func(s string) string {
-		return strings.ReplaceAll(s, "_", "")
-	}
-
 	heroIsAlly := func(a, b string) bool {
-		ta, okA := heroTeam[heroKey(a)]
-		tb, okB := heroTeam[heroKey(b)]
-		if !okA || !okB {
-			return false
-		}
-		return ta == tb
-	}
-
-	cleanInflictor := func(inf string) string {
-		return strings.TrimPrefix(inf, "modifier_")
-	}
-
-	lookupCategory := func(inf string) string {
-		if cat, ok := BuffCategories[cleanInflictor(inf)]; ok {
-			return cat
-		}
-		return ""
+		return isAllyByTeam(heroTeam, a, b)
 	}
 
 	for _, e := range events {
@@ -972,6 +952,30 @@ func parseEpilogue(keyJSON string) (*epilogueResult, error) {
 	return r, nil
 }
 
+func heroKey(s string) string {
+	return strings.ReplaceAll(s, "_", "")
+}
+
+func isAllyByTeam(heroTeam map[string]string, a, b string) bool {
+	ta, okA := heroTeam[heroKey(a)]
+	tb, okB := heroTeam[heroKey(b)]
+	if !okA || !okB {
+		return false
+	}
+	return ta == tb
+}
+
+func cleanInflictor(inf string) string {
+	return strings.TrimPrefix(inf, "modifier_")
+}
+
+func lookupCategory(inf string) string {
+	if cat, ok := BuffCategories[cleanInflictor(inf)]; ok {
+		return cat
+	}
+	return ""
+}
+
 func intsToTrimmedString(ints []int) string {
 	b := make([]byte, len(ints))
 	for i, v := range ints {
@@ -1006,6 +1010,9 @@ func parseInt64(raw json.RawMessage) int64 {
 	}
 	var st string
 	if err := json.Unmarshal(raw, &st); err == nil {
+		if n, err := strconv.ParseInt(strings.TrimSpace(st), 10, 64); err == nil {
+			return n
+		}
 		var nn float64
 		if _, err := fmt.Sscanf(st, "%f", &nn); err == nil {
 			return int64(nn)

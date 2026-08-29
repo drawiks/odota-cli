@@ -1,0 +1,65 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'push' }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: vet
+        run: go vet ./...
+      - name: test
+        run: go test ./...
+
+  release:
+    if: github.event_name == 'push'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: validate VERSION
+        run: |
+          [[ "$(cat VERSION)" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "VERSION must be semver"; exit 1; }
+      - name: skip if already released
+        id: released
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          V="v$(cat VERSION)"
+          if gh release view "$V" >/dev/null 2>&1; then
+            echo "released=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "released=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: build
+        if: steps.released.outputs.released == 'false'
+        run: ./build.sh
+      - name: checksums
+        if: steps.released.outputs.released == 'false'
+        run: (cd build && sha256sum *) > build/checksums.txt
+      - name: publish
+        if: steps.released.outputs.released == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          V="v$(cat VERSION)"
+          gh release create "$V" build/* --title "$V" --generate-notes

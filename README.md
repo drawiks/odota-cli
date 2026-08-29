@@ -9,10 +9,13 @@
   <a href="#usage">Usage</a> •
   <a href="#output-format">Output</a> •
   <a href="#build-from-source">Build</a> •
+  <a href="#releases">Releases</a> •
   <a href="#license">License</a>
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/github/v/release/drawiks/odota-cli" alt="Release">
+  <img src="https://img.shields.io/github/checks-status/drawiks/odota-cli/main" alt="CI">
   <img src="https://img.shields.io/badge/go-1.26-blue?logo=go" alt="Go 1.26">
   <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="License">
 </p>
@@ -32,9 +35,14 @@ CLI tool for parsing Dota 2 replay files into structured JSON.
 go install github.com/drawiks/odota-cli@latest
 ```
 
+Or grab a prebuilt binary (linux/macos/windows, amd64/arm64) from the [Releases](https://github.com/drawiks/odota-cli/releases) page — each release ships 6 binaries + `checksums.txt`.
+
 ## Usage
 
 ```bash
+# Version (v0.1.0 when built by build.sh/CI, "dev" otherwise)
+odota_cli --version
+
 # Parse .dem file via Docker parser
 odota_cli match.dem > match.json
 
@@ -44,6 +52,8 @@ odota_cli --url http://localhost:5600 match.dem > match.json
 # Read local NDJSON file (no Docker needed)
 odota_cli match.ndjson > match.json
 ```
+
+Inputs with `.ndjson` or `.json` extension are read locally as parser NDJSON output; anything else is treated as a binary `.dem` and POSTed to the parser (default `--url http://localhost:5600`).
 
 ## Output Format
 
@@ -136,8 +146,17 @@ Per-player `*_duration` / `*_sources` pairs (sources sorted by duration desc):
 ```bash
 git clone https://github.com/drawiks/odota-cli.git
 cd odota-cli
+
+# Single binary (unstamped --version says "dev")
 go build -o odota_cli
+
+# All 6 release binaries, stamped with the version from VERSION
+./build.sh
 ```
+
+## Releases
+
+Versioning is manual and dead simple: bump plain semver in the `VERSION` file at the repo root, push to `main`, CI tests, builds the 6 binaries, and publishes a GitHub release (tag + title `v<version>`, auto-generated changelog notes, binaries + `checksums.txt`) — but only if `v$(cat VERSION)` isn't released yet. Want no release? Don't touch `VERSION`.
 
 ## License
 

@@ -9,6 +9,7 @@
 *.dylib
 odota_cli
 build/
+build.sh
 
 # Test binary, built with `go test -c`
 *.test
@@ -35,5 +36,3 @@ go.work.sum
 
 AGENTS.md
 *.json
-
-build.sh
