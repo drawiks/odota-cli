@@ -35,9 +35,9 @@ func main() {
 	if strings.HasSuffix(inputFile, ".ndjson") || strings.HasSuffix(inputFile, ".json") {
 		events, err = parser.ReadNDJSONFile(inputFile)
 	} else {
-		demData, err := os.ReadFile(inputFile)
-		if err != nil {
-			log.Fatalf("read dem file: %v", err)
+		demData, rerr := os.ReadFile(inputFile)
+		if rerr != nil {
+			log.Fatalf("read dem file: %v", rerr)
 		}
 		events, err = parser.FetchFromParser(demData, *url)
 	}

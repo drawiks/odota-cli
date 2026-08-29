@@ -136,7 +136,7 @@ Per-player `*_duration` / `*_sources` pairs (sources sorted by duration desc):
 ```bash
 git clone https://github.com/drawiks/odota-cli.git
 cd odota-cli
-go build
+go build -o odota_cli
 ```
 
 ## License

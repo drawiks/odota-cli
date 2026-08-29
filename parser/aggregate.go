@@ -6,6 +6,7 @@ import (
 	"math"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -35,7 +36,6 @@ func Aggregate(events []RawEvent) (*Match, error) {
 	towerDamageByAttacker := map[string]int{}
 
 	type stunAgg struct {
-		Count int
 		Total float64
 	}
 	stunSources := map[string]stunAgg{}
@@ -377,7 +377,6 @@ func Aggregate(events []RawEvent) (*Match, error) {
 			if e.StunDuration != nil && *e.StunDuration > 0 {
 				skey := fmt.Sprintf("%s:%s", attacker, clean)
 				agg := stunSources[skey]
-				agg.Count++
 				agg.Total += *e.StunDuration
 				stunSources[skey] = agg
 			}
@@ -621,11 +620,6 @@ func Aggregate(events []RawEvent) (*Match, error) {
 		if hero, ok := slotToHero[p.Slot]; ok {
 			p.Hero = hero
 			p.HeroID = HeroMap[hero]
-		}
-		if p.Hero == "" {
-			if id, ok := HeroMap[p.Hero]; ok {
-				p.HeroID = id
-			}
 		}
 	}
 
@@ -1002,6 +996,9 @@ func parseInt64(raw json.RawMessage) int64 {
 	s := strings.TrimSpace(string(raw))
 	if len(s) == 0 {
 		return 0
+	}
+	if n, err := strconv.ParseInt(s, 10, 64); err == nil {
+		return n
 	}
 	var n float64
 	if err := json.Unmarshal(raw, &n); err == nil {

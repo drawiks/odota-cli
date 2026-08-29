@@ -9,18 +9,37 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 func FetchFromParser(demData []byte, parserURL string) ([]RawEvent, error) {
-	resp, err := http.Post(parserURL, "application/octet-stream", bytes.NewReader(demData))
+	return fetchFromParserReader(bytes.NewReader(demData), parserURL)
+}
+
+func ParseDem(r io.Reader, parserURL string) (*Match, error) {
+	events, err := fetchFromParserReader(r, parserURL)
+	if err != nil {
+		return nil, err
+	}
+	return Aggregate(events)
+}
+
+func fetchFromParserReader(body io.Reader, parserURL string) ([]RawEvent, error) {
+	client := &http.Client{Timeout: 60 * time.Second}
+	req, err := http.NewRequest(http.MethodPost, parserURL, body)
+	if err != nil {
+		return nil, fmt.Errorf("parser request: %w", err)
+	}
+	req.Header.Set("Content-Type", "application/octet-stream")
+	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("parser request: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(resp.Body)
-		return nil, fmt.Errorf("parser returned %d: %s", resp.StatusCode, string(body))
+		respBody, _ := io.ReadAll(resp.Body)
+		return nil, fmt.Errorf("parser returned %d: %s", resp.StatusCode, string(respBody))
 	}
 
 	return readNDJSON(resp.Body)
