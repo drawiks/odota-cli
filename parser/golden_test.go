@@ -30,7 +30,7 @@ func TestGoldenMiniNDJSON(t *testing.T) {
 		"epilogue", "player_slot", "interval",
 		"DOTA_COMBATLOG_DAMAGE", "DOTA_COMBATLOG_HEAL",
 		"DOTA_COMBATLOG_MODIFIER_ADD", "DOTA_COMBATLOG_MODIFIER_REMOVE",
-		"DOTA_COMBATLOG_PURCHASE", "CHAT_MESSAGE_FIRSTBLOOD",
+		"DOTA_COMBATLOG_PURCHASE", "DOTA_COMBATLOG_GOLD", "CHAT_MESSAGE_FIRSTBLOOD",
 	} {
 		if counts[typ] == 0 {
 			t.Errorf("fixture missing event type %q", typ)

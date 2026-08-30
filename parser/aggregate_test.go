@@ -117,6 +117,17 @@ func purchaseEv(t int, target, item string) RawEvent {
 	return RawEvent{Type: "DOTA_COMBATLOG_PURCHASE", Time: t, TargetName: target, Valuename: item}
 }
 
+func goldEv(t, val int, reason *int, target string) RawEvent {
+	return RawEvent{
+		Type: "DOTA_COMBATLOG_GOLD", Time: t, Value: json.RawMessage(strconv.Itoa(val)),
+		GoldReason: reason, TargetName: target,
+	}
+}
+
+func lifeEv(t, slot, state int) RawEvent {
+	return RawEvent{Type: "interval", Time: t, Slot: iptr(slot), LifeState: iptr(state)}
+}
+
 func firstBloodEv(slot int) RawEvent {
 	return RawEvent{
 		Type:    "CHAT_MESSAGE_FIRSTBLOOD",
@@ -580,6 +591,64 @@ func TestPurchaseShortVariantName(t *testing.T) {
 	// witchdoctor is not a player; ignored cleanly
 	if rB := playerOf(t, m, "rubick"); rB.GoldSpentDust != 80 {
 		t.Errorf("rubick dust = %d", rB.GoldSpentDust)
+	}
+}
+
+func TestDeathGoldLost(t *testing.T) {
+	m := aggregateOrFatal(t, twoPlayerBase(t,
+		goldEv(1, -200, iptr(1), treant),
+		goldEv(2, -80, iptr(1), treant),
+		goldEv(3, -50, iptr(2), treant),                      // not a death loss (reason 2)
+		goldEv(4, 30, nil, treant),                           // no reason
+		goldEv(5, -25, iptr(1), "npc_dota_hero_witchdoctor"), // non-player, ignored
+	))
+	if tA := playerOf(t, m, "treant"); tA.GoldLost != 280 {
+		t.Errorf("treant gold_lost = %d, want 280", tA.GoldLost)
+	}
+}
+
+func TestDeathGoldLostPositiveValue(t *testing.T) {
+	// death loss logs a negative value; abs() recovers it regardless of sign
+	m := aggregateOrFatal(t, twoPlayerBase(t, goldEv(1, 300, iptr(1), treant)))
+	if tA := playerOf(t, m, "treant"); tA.GoldLost != 300 {
+		t.Errorf("treant gold_lost = %d, want 300", tA.GoldLost)
+	}
+}
+
+func TestTimeDeadLifeState(t *testing.T) {
+	m := aggregateOrFatal(t, twoPlayerBase(t,
+		lifeEv(500, 0, 0), // alive
+		lifeEv(501, 0, 1), // dies
+		lifeEv(502, 0, 1),
+		lifeEv(503, 0, 1),
+		lifeEv(504, 0, 0), // respawns
+		lifeEv(505, 0, 0),
+		// buyback after a second death: dead window cut short
+		lifeEv(510, 0, 1), // dies
+		lifeEv(511, 0, 0), // buyback -> alive next tick
+	))
+	if tA := playerOf(t, m, "treant"); tA.TimeDead != 4 {
+		t.Errorf("treant time_dead = %v, want 4 (3s window + 1s buyback)", tA.TimeDead)
+	}
+}
+
+func TestTimeDeadStillDeadAtEnd(t *testing.T) {
+	// hero dead from t=700 until the last interval (t=900); life_state after the
+	// final snapshot (which carries the last stats) keeps the death open to 900
+	m := aggregateOrFatal(t, twoPlayerBase(t,
+		lifeEv(600, 0, 0),
+		lifeEv(700, 0, 1),
+		lifeEv(900, 0, 1), // last interval, still dead
+	))
+	if tA := playerOf(t, m, "treant"); tA.TimeDead != 200 {
+		t.Errorf("treant time_dead = %v, want 200 (700..900)", tA.TimeDead)
+	}
+}
+
+func TestTimeDeadNoLifeState(t *testing.T) {
+	m := aggregateOrFatal(t, twoPlayerBase(t))
+	if tA := playerOf(t, m, "treant"); tA.TimeDead != 0 {
+		t.Errorf("no life_state should yield time_dead 0, got %v", tA.TimeDead)
 	}
 }
 

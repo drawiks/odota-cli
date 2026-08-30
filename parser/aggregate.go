@@ -122,6 +122,11 @@ func Aggregate(events []RawEvent) (*Match, error) {
 
 	goldSpentSmoke := map[string]int{}
 	goldSpentDust := map[string]int{}
+	goldLostByHero := map[string]int{}
+
+	deadSecondsBySlot := map[int]float64{}
+	lastLifeState := map[int]int{}
+	stateTime := map[int]int{}
 
 	firstBloodSlot := -1
 
@@ -158,6 +163,16 @@ func Aggregate(events []RawEvent) (*Match, error) {
 					if team, ok := slotTeam[*e.Slot]; ok {
 						heroTeam[heroKey(hero)] = team
 					}
+				}
+				if e.LifeState != nil {
+					if prev, ok := lastLifeState[*e.Slot]; ok {
+						prevT := stateTime[*e.Slot]
+						if prev != 0 {
+							deadSecondsBySlot[*e.Slot] += float64(e.Time - prevT)
+						}
+					}
+					lastLifeState[*e.Slot] = *e.LifeState
+					stateTime[*e.Slot] = e.Time
 				}
 			}
 
@@ -585,6 +600,11 @@ func Aggregate(events []RawEvent) (*Match, error) {
 				goldSpentDust[heroKey(hero)] += cost
 			}
 
+		case "DOTA_COMBATLOG_GOLD":
+			if e.GoldReason != nil && *e.GoldReason == 1 && e.TargetName != "" {
+				goldLostByHero[heroKey(e.TargetName)] += int(math.Abs(parseRawFloat(e.Value)))
+			}
+
 		case "CHAT_MESSAGE_FIRSTBLOOD":
 			if len(e.Player1) > 0 {
 				var p1 float64
@@ -646,6 +666,9 @@ func Aggregate(events []RawEvent) (*Match, error) {
 
 		mp.GoldSpentSmoke = goldSpentSmoke[pHeroKey]
 		mp.GoldSpentDust = goldSpentDust[pHeroKey]
+		mp.GoldLost = goldLostByHero[pHeroKey]
+
+		mp.TimeDead = math.Round(deadSecondsBySlot[p.Slot])
 
 		for key, agg := range stunSources {
 			parts := strings.SplitN(key, ":", 2)

@@ -28,6 +28,7 @@ type Player struct {
 	HeroDamage      int           `json:"hero_damage"`
 	DamageTaken     int           `json:"damage_taken"`
 	TowerDamage     int           `json:"tower_damage"`
+	TimeDead        float64       `json:"time_dead"`
 	StunDuration    float64       `json:"stun_duration"`
 	StunSources     []SourceEntry `json:"stun_sources,omitempty"`
 	BuffDuration    float64       `json:"buff_duration"`
@@ -54,6 +55,7 @@ type Player struct {
 	GoldSpentWards  int           `json:"gold_spent_wards"`
 	GoldSpentSmoke  int           `json:"gold_spent_smoke"`
 	GoldSpentDust   int           `json:"gold_spent_dust"`
+	GoldLost        int           `json:"gold_lost"`
 	CampsStacked    int           `json:"camps_stacked"`
 	CreepsStacked   int           `json:"creeps_stacked"`
 	RunePickups     int           `json:"rune_pickups"`
@@ -106,4 +108,6 @@ type RawEvent struct {
 	RunePickups       int     `json:"rune_pickups"`
 	FirstbloodClaimed int     `json:"firstblood_claimed"`
 	Gold              int     `json:"gold"`
+	LifeState         *int    `json:"life_state"`
+	GoldReason        *int    `json:"gold_reason"`
 }
