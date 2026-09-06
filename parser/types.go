@@ -16,6 +16,8 @@ type Player struct {
 	Hero             string        `json:"hero"`
 	Team             string        `json:"team"`
 	Name             string        `json:"name"`
+	Position         int           `json:"position,omitempty"`
+	Lane             string        `json:"lane,omitempty"`
 	Kills            int           `json:"kills"`
 	Deaths           int           `json:"deaths"`
 	Assists          int           `json:"assists"`
@@ -97,24 +99,26 @@ type RawEvent struct {
 	Charges          *int            `json:"charges"`
 	HeroID           *int            `json:"hero_id"`
 
-	Kills             int     `json:"kills"`
-	Deaths            int     `json:"deaths"`
-	Assists           int     `json:"assists"`
-	Level             int     `json:"level"`
-	Lh                int     `json:"lh"`
-	Xp                int     `json:"xp"`
-	Networth          int     `json:"networth"`
-	Stuns             float64 `json:"stuns"`
-	ObsPlaced         int     `json:"obs_placed"`
-	SenPlaced         int     `json:"sen_placed"`
-	CreepsStacked     int     `json:"creeps_stacked"`
-	CampsStacked      int     `json:"camps_stacked"`
-	RunePickups       int     `json:"rune_pickups"`
-	WisdomsCaptured   int     `json:"wisdoms_captured"`
-	WatchersCaptured  int     `json:"watchers_captured"`
-	LotusesGathered   int     `json:"lotuses_gathered"`
-	FirstbloodClaimed int     `json:"firstblood_claimed"`
-	Gold              int     `json:"gold"`
-	LifeState         *int    `json:"life_state"`
-	GoldReason        *int    `json:"gold_reason"`
+	Kills             int      `json:"kills"`
+	Deaths            int      `json:"deaths"`
+	Assists           int      `json:"assists"`
+	Level             int      `json:"level"`
+	Lh                int      `json:"lh"`
+	Xp                int      `json:"xp"`
+	Networth          int      `json:"networth"`
+	Stuns             float64  `json:"stuns"`
+	ObsPlaced         int      `json:"obs_placed"`
+	SenPlaced         int      `json:"sen_placed"`
+	CreepsStacked     int      `json:"creeps_stacked"`
+	CampsStacked      int      `json:"camps_stacked"`
+	RunePickups       int      `json:"rune_pickups"`
+	WisdomsCaptured   int      `json:"wisdoms_captured"`
+	WatchersCaptured  int      `json:"watchers_captured"`
+	LotusesGathered   int      `json:"lotuses_gathered"`
+	FirstbloodClaimed int      `json:"firstblood_claimed"`
+	Gold              int      `json:"gold"`
+	LifeState         *int     `json:"life_state"`
+	GoldReason        *int     `json:"gold_reason"`
+	X                 *float64 `json:"x"`
+	Y                 *float64 `json:"y"`
 }

@@ -111,8 +111,8 @@ func TestGoldenRadiantWinAndMetadata(t *testing.T) {
 	if m.MatchID != 8926354517 || m.DurationSec != 600 || !m.RadiantWin {
 		t.Errorf("metadata = %+v", m)
 	}
-	if len(m.Players) != 4 {
-		t.Fatalf("len(players) = %d", len(m.Players))
+	if len(m.Players) != 10 {
+		t.Fatalf("len(players) = %d (want full 2-1-2: 5 per team)", len(m.Players))
 	}
 	for i, p := range m.Players {
 		if p.PlayerID != i {

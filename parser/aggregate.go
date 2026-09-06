@@ -27,6 +27,9 @@ func Aggregate(events []RawEvent) (*Match, error) {
 	lastInterval := map[int]RawEvent{}
 	lastIntervalTime := 0
 
+	roleBySlot := map[int]*roleStats{}
+	roleGold := map[int]int{}
+
 	slotTeam := map[int]string{}
 	heroTeam := map[string]string{}
 
@@ -174,6 +177,17 @@ func Aggregate(events []RawEvent) (*Match, error) {
 					}
 					lastLifeState[*e.Slot] = *e.LifeState
 					stateTime[*e.Slot] = e.Time
+				}
+				if e.Time >= 0 && e.Time <= roleWindowSec && e.X != nil && e.Y != nil {
+					if e.LifeState == nil || *e.LifeState == 0 {
+						rs := roleBySlot[*e.Slot]
+						if rs == nil {
+							rs = &roleStats{}
+							roleBySlot[*e.Slot] = rs
+						}
+						rs.sample(*e.X*128, *e.Y*128)
+					}
+					roleGold[*e.Slot] = e.Gold
 				}
 			}
 
@@ -914,6 +928,22 @@ func Aggregate(events []RawEvent) (*Match, error) {
 		mp.HealDuration = math.Round(totalHealDuration)
 		mp.HealValue = math.Round(totalHealValue)
 	}
+
+	roleInputs := make([]roleInput, 0, len(m.Players))
+	for i := range m.Players {
+		slot := players[i].Slot
+		farmAll := 0
+		if iv, ok := lastInterval[slot]; ok {
+			farmAll = iv.Gold
+		}
+		roleInputs = append(roleInputs, roleInput{
+			p:        &m.Players[i],
+			stats:    roleBySlot[slot],
+			farmGold: roleGold[slot],
+			farmAll:  farmAll,
+		})
+	}
+	assignRoles(roleInputs)
 
 	return m, nil
 }
