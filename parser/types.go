@@ -63,6 +63,7 @@ type Player struct {
 	WatchersCaptured int           `json:"watchers_captured"`
 	LotusesGathered  int           `json:"lotuses_gathered"`
 	FirstBlood       bool          `json:"first_blood"`
+	CourierKills     int           `json:"courier_kills"`
 }
 
 type SourceEntry struct {

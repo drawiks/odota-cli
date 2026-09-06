@@ -123,6 +123,7 @@ func Aggregate(events []RawEvent) (*Match, error) {
 	goldSpentSmoke := map[string]int{}
 	goldSpentDust := map[string]int{}
 	goldLostByHero := map[string]int{}
+	courierKills := map[string]int{}
 
 	deadSecondsBySlot := map[int]float64{}
 	lastLifeState := map[int]int{}
@@ -605,6 +606,11 @@ func Aggregate(events []RawEvent) (*Match, error) {
 				goldLostByHero[heroKey(e.TargetName)] += int(math.Abs(parseRawFloat(e.Value)))
 			}
 
+		case "DOTA_COMBATLOG_DEATH":
+			if e.TargetName == "npc_dota_courier" && e.Sourcename != "" {
+				courierKills[heroKey(e.Sourcename)]++
+			}
+
 		case "CHAT_MESSAGE_FIRSTBLOOD":
 			if len(e.Player1) > 0 {
 				var p1 float64
@@ -670,6 +676,7 @@ func Aggregate(events []RawEvent) (*Match, error) {
 		mp.GoldSpentSmoke = goldSpentSmoke[pHeroKey]
 		mp.GoldSpentDust = goldSpentDust[pHeroKey]
 		mp.GoldLost = goldLostByHero[pHeroKey]
+		mp.CourierKills = courierKills[pHeroKey]
 
 		mp.TimeDead = math.Round(deadSecondsBySlot[p.Slot])
 

@@ -620,6 +620,35 @@ func TestDeathGoldLostPositiveValue(t *testing.T) {
 	}
 }
 
+func courierDeathEv(t int, killer, owner string) RawEvent {
+	return RawEvent{
+		Type: "DOTA_COMBATLOG_DEATH", Time: t,
+		AttackerName: killer, TargetName: "npc_dota_courier",
+		Sourcename: killer, Targetsourcename: owner,
+		Attackerhero: bptr(true), Targethero: bptr(false),
+	}
+}
+
+func TestCourierKills(t *testing.T) {
+	m := aggregateOrFatal(t, fourPlayerBase(t,
+		courierDeathEv(100, rubick, treant), // rubick kills treant's courier
+		courierDeathEv(200, rubick, treant), // rubick kills another
+		RawEvent{Type: "DOTA_COMBATLOG_DEATH", Time: 300, // creep killer not a player
+			AttackerName: "npc_dota_creep_lane_badguys_1", TargetName: "npc_dota_courier",
+			Sourcename: "npc_dota_creep_lane_badguys_1", Targetsourcename: lich,
+			Attackerhero: bptr(false), Targethero: bptr(false)},
+		RawEvent{Type: "DOTA_COMBATLOG_DEATH", Time: 400, // hero death is not a courier
+			AttackerName: rubick, TargetName: treant, Sourcename: rubick,
+			Attackerhero: bptr(true), Targethero: bptr(true)},
+	))
+	if rB := playerOf(t, m, "rubick"); rB.CourierKills != 2 {
+		t.Errorf("rubick courier_kills = %d, want 2", rB.CourierKills)
+	}
+	if tA := playerOf(t, m, "treant"); tA.CourierKills != 0 {
+		t.Errorf("treant courier_kills = %d, want 0", tA.CourierKills)
+	}
+}
+
 func TestTimeDeadLifeState(t *testing.T) {
 	m := aggregateOrFatal(t, twoPlayerBase(t,
 		lifeEv(500, 0, 0), // alive

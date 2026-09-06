@@ -78,7 +78,8 @@
       "wisdoms_captured": 1,
       "watchers_captured": 2,
       "lotuses_gathered": 3,
-      "first_blood": false
+      "first_blood": false,
+      "courier_kills": 1
     },
     {
       "steam_id": 76561199192587348,
@@ -143,7 +144,8 @@
       "wisdoms_captured": 0,
       "watchers_captured": 0,
       "lotuses_gathered": 0,
-      "first_blood": true
+      "first_blood": true,
+      "courier_kills": 0
     },
     {
       "steam_id": 76561198196019611,
@@ -208,7 +210,8 @@
       "wisdoms_captured": 0,
       "watchers_captured": 0,
       "lotuses_gathered": 0,
-      "first_blood": false
+      "first_blood": false,
+      "courier_kills": 0
     },
     {
       "steam_id": 76561199370624370,
@@ -259,7 +262,8 @@
       "wisdoms_captured": 0,
       "watchers_captured": 0,
       "lotuses_gathered": 0,
-      "first_blood": false
+      "first_blood": false,
+      "courier_kills": 0
     }
   ]
 }
