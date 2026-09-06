@@ -3,6 +3,7 @@ package parser
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -13,20 +14,28 @@ import (
 )
 
 func FetchFromParser(demData []byte, parserURL string) ([]RawEvent, error) {
-	return fetchFromParserReader(bytes.NewReader(demData), parserURL)
+	return FetchFromParserContext(context.Background(), demData, parserURL)
 }
 
 func ParseDem(r io.Reader, parserURL string) (*Match, error) {
-	events, err := fetchFromParserReader(r, parserURL)
+	return ParseDemContext(context.Background(), r, parserURL)
+}
+
+func FetchFromParserContext(ctx context.Context, demData []byte, parserURL string) ([]RawEvent, error) {
+	return fetchFromParserReader(ctx, bytes.NewReader(demData), parserURL)
+}
+
+func ParseDemContext(ctx context.Context, r io.Reader, parserURL string) (*Match, error) {
+	events, err := fetchFromParserReader(ctx, r, parserURL)
 	if err != nil {
 		return nil, err
 	}
 	return Aggregate(events)
 }
 
-func fetchFromParserReader(body io.Reader, parserURL string) ([]RawEvent, error) {
-	client := &http.Client{Timeout: 60 * time.Second}
-	req, err := http.NewRequest(http.MethodPost, parserURL, body)
+func fetchFromParserReader(ctx context.Context, body io.Reader, parserURL string) ([]RawEvent, error) {
+	client := &http.Client{Timeout: 10 * time.Minute}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, parserURL, body)
 	if err != nil {
 		return nil, fmt.Errorf("parser request: %w", err)
 	}
