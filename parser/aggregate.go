@@ -648,6 +648,9 @@ func Aggregate(events []RawEvent) (*Match, error) {
 			mp.CampsStacked = iv.CampsStacked
 			mp.CreepsStacked = iv.CreepsStacked
 			mp.RunePickups = iv.RunePickups
+			mp.WisdomsCaptured = iv.WisdomsCaptured
+			mp.WatchersCaptured = iv.WatchersCaptured
+			mp.LotusesGathered = iv.LotusesGathered
 			mp.FirstBlood = firstBloodSlot == p.Slot
 
 			if lastIntervalTime > 0 {

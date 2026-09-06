@@ -261,7 +261,8 @@ func TestIntervalLastOverwritesAndGPMXPM(t *testing.T) {
 		statEv(720, 0, 100, 200),
 		RawEvent{Type: "interval", Time: 1800, Slot: iptr(0), Gold: 40000, Xp: 80000,
 			Kills: 12, Deaths: 3, Assists: 15, Level: 30, Lh: 250, Networth: 25000,
-			Stuns: 22.5, SenPlaced: 4, CampsStacked: 2, CreepsStacked: 5, RunePickups: 1},
+			Stuns: 22.5, SenPlaced: 4, CampsStacked: 2, CreepsStacked: 5, RunePickups: 1,
+			WisdomsCaptured: 1, WatchersCaptured: 2, LotusesGathered: 3},
 		statEv(720, 1, 15000, 30000),
 		RawEvent{Type: "interval", Time: 1800, Slot: iptr(1), Gold: 35000, Xp: 70000,
 			Kills: 9, Level: 28, Networth: 22000},
@@ -282,6 +283,10 @@ func TestIntervalLastOverwritesAndGPMXPM(t *testing.T) {
 	}
 	if tA.CampsStacked != 2 || tA.CreepsStacked != 5 || tA.RunePickups != 1 {
 		t.Errorf("treant misc = camps:%d creeps:%d runes:%d", tA.CampsStacked, tA.CreepsStacked, tA.RunePickups)
+	}
+	if tA.WisdomsCaptured != 1 || tA.WatchersCaptured != 2 || tA.LotusesGathered != 3 {
+		t.Errorf("treant teamstats = wisdom:%d watchers:%d lotuses:%d",
+			tA.WisdomsCaptured, tA.WatchersCaptured, tA.LotusesGathered)
 	}
 	rB := playerOf(t, m, "rubick")
 	if rB.GPM != 1167 || rB.XPM != 2333 || rB.Networth != 22000 {

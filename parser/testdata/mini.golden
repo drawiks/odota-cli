@@ -75,6 +75,9 @@
       "camps_stacked": 2,
       "creeps_stacked": 5,
       "rune_pickups": 1,
+      "wisdoms_captured": 1,
+      "watchers_captured": 2,
+      "lotuses_gathered": 3,
       "first_blood": false
     },
     {
@@ -137,6 +140,9 @@
       "camps_stacked": 0,
       "creeps_stacked": 0,
       "rune_pickups": 0,
+      "wisdoms_captured": 0,
+      "watchers_captured": 0,
+      "lotuses_gathered": 0,
       "first_blood": true
     },
     {
@@ -199,6 +205,9 @@
       "camps_stacked": 0,
       "creeps_stacked": 0,
       "rune_pickups": 0,
+      "wisdoms_captured": 0,
+      "watchers_captured": 0,
+      "lotuses_gathered": 0,
       "first_blood": false
     },
     {
@@ -247,6 +256,9 @@
       "camps_stacked": 0,
       "creeps_stacked": 0,
       "rune_pickups": 0,
+      "wisdoms_captured": 0,
+      "watchers_captured": 0,
+      "lotuses_gathered": 0,
       "first_blood": false
     }
   ]
